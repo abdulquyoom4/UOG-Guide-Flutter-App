@@ -1,0 +1,54 @@
+name: uog_guide
+description: UOG Mandi Bahauddin Sub-Campus Student Guide App
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  webview_flutter: ^4.10.0
+  webview_flutter_android: ^4.12.0
+  url_launcher: ^6.2.2
+  firebase_core: ^4.7.0
+  font_awesome_flutter: ^11.0.0
+  shared_preferences: ^2.2.2
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/uogicon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/uogicon.png"
+  min_sdk_android: 21
+
+  # Add Google Fonts via pubspec or use local Poppins font
+  # To add Poppins, download from fonts.google.com and place in assets/fonts/
+  # then uncomment below:
+  #
+  # fonts:
+  #   - family: Poppins
+  #     fonts:
+  #       - asset: assets/fonts/Poppins-Regular.ttf
+  #       - asset: assets/fonts/Poppins-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Poppins-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Poppins-Bold.ttf
+  #         weight: 700
+  #
+  # OR use google_fonts package instead (add to dependencies):
+  # google_fonts: ^6.1.0
