@@ -54,7 +54,6 @@ class _GpaScreenState extends State<GpaScreen> {
           const UOGHeader(
             title: 'GPA Calculator',
             subtitle: 'University of Gujrat grading system',
-            showBack: true,
           ),
 
           Expanded(

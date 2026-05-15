@@ -16,7 +16,8 @@ class DepartmentsScreen extends StatelessWidget {
       'Core CS topics including algorithms, databases, networks, AI and software engineering.',
       'colors': [Color(0xFF1E40AF), Color(0xFF3B82F6)],
       'studyScheme':
-      'https://uog.edu.pk/en/uog-academics/department-of-computer-science/programs'
+      'https://uog.edu.pk/en/uog-academics/department-of-computer-science/programs',
+      'scrollId': '#uogis-data'
     },
     {
       'name': 'Business Administration',
@@ -28,7 +29,8 @@ class DepartmentsScreen extends StatelessWidget {
       'Business fundamentals covering marketing, finance, management and entrepreneurship.',
       'colors': [Color(0xFF065F46), Color(0xFF10B981)],
       'studyScheme':
-      'https://uog.edu.pk/en/uog-academics/department-of-computer-science/programs'
+      'https://uog.edu.pk/en/uog-academics/department-of-management-sciences/programs',
+      'scrollId': '#uogis-data'
     },
     {
       'name': 'English Literature',
@@ -40,7 +42,8 @@ class DepartmentsScreen extends StatelessWidget {
       'Study of language, literature, linguistics, and creative writing.',
       'colors': [Color(0xFF7C2D92), Color(0xFFA855F7)],
       'studyScheme':
-      'https://uog.edu.pk/en/uog-academics/department-of-computer-science/programs'
+      'https://uog.edu.pk/en/uog-academics/department-of-english/programs',
+      'scrollId': '#uogis-data'
     },
     {
       'name': 'Mathematics',
@@ -52,7 +55,8 @@ class DepartmentsScreen extends StatelessWidget {
       'Pure and applied mathematics including calculus, algebra and statistics.',
       'colors': [Color(0xFF9F1239), Color(0xFFF43F5E)],
       'studyScheme':
-      'https://uog.edu.pk/en/uog-academics/department-of-computer-science/programs'
+      'https://uog.edu.pk/en/uog-academics/department-of-mathematics/programs',
+      'scrollId': '#uogis-data'
     },
   ];
 
@@ -67,11 +71,10 @@ class DepartmentsScreen extends StatelessWidget {
           const UOGHeader(
             title: 'Departments',
             subtitle: 'MB Sub-Campus programs',
-            showBack: true,
           ),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              padding: const EdgeInsets.fromLTRB(6, 12, 6, 16),
               itemCount: _departments.length,
               itemBuilder: (context, i) {
                 final d = _departments[i];
@@ -84,6 +87,7 @@ class DepartmentsScreen extends StatelessWidget {
                   desc: d['desc'] as String,
                   colors: d['colors'] as List<Color>,
                   studyScheme: d['studyScheme'] as String,
+                  scrollId: d['scrollId'] as String,
                 );
               },
             ),
@@ -103,6 +107,7 @@ class _DepartmentCard extends StatefulWidget {
   final String desc;
   final List<Color> colors;
   final String studyScheme;
+  final String scrollId;
 
   const _DepartmentCard({
     required this.name,
@@ -113,6 +118,7 @@ class _DepartmentCard extends StatefulWidget {
     required this.desc,
     required this.colors,
     required this.studyScheme,
+    required this.scrollId,
   });
 
   @override
@@ -130,7 +136,7 @@ class _DepartmentCardState extends State<_DepartmentCard> {
     return GestureDetector(
       onTap: () => setState(() => _expanded = !_expanded),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(14),
@@ -138,7 +144,6 @@ class _DepartmentCardState extends State<_DepartmentCard> {
         ),
         child: Column(
           children: [
-
             Container(
               height: 58,
               decoration: BoxDecoration(
@@ -164,7 +169,7 @@ class _DepartmentCardState extends State<_DepartmentCard> {
                     ),
                     child: Icon(widget.icon, color: Colors.white, size: 18),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 17),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -201,7 +206,7 @@ class _DepartmentCardState extends State<_DepartmentCard> {
 
 
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(26, 12, 26, 12),
               child: Row(
                 children: [
                   _StatChip(label: '${widget.years} Years'),
@@ -216,7 +221,7 @@ class _DepartmentCardState extends State<_DepartmentCard> {
             // ── Expanded Section ──────────────────────────────────────
             if (_expanded)
               Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -238,14 +243,16 @@ class _DepartmentCardState extends State<_DepartmentCard> {
                           context,
                           MaterialPageRoute(
                             builder: (_) =>
-                                WebViewScreen(url: widget.studyScheme),
+                                WebViewScreen(
+                                    url: widget.studyScheme,
+                                    scrollSelector: widget.scrollId),
                           ),
                         );
                       },
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.onSurface,
                         side: BorderSide(
-                          color: theme.colorScheme.primary,
+                          color: theme.colorScheme.outline,
                           width: 0.5,
                         ),
                         shape: RoundedRectangleBorder(

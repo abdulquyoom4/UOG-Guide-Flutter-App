@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:uog_guide/screens/profile_screen.dart';
 
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/gpa_screen.dart';
 import 'screens/departments_screen.dart';
 import 'screens/campus_screen.dart';
+import 'screens/login_screen.dart';
 import 'firebase_options.dart';
 
 final ValueNotifier<ThemeMode> themeNotifier =
@@ -68,8 +71,30 @@ class UOGGuideApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: mode,
 
-          home: const MainShell(),
+          home: const AuthWrapper(),
         );
+      },
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const MainShell();
+        }
+        return const LoginScreen();
       },
     );
   }
@@ -89,7 +114,7 @@ class _MainShellState extends State<MainShell> {
     HomeScreen(),
     GpaScreen(),
     DepartmentsScreen(),
-    CampusScreen(),
+    ProfileScreen()
   ];
 
   @override
@@ -145,9 +170,9 @@ class _MainShellState extends State<MainShell> {
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined),
-            activeIcon: Icon(Icons.location_on),
-            label: 'Campus',
+            icon: Icon(Icons.person_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'Account',
           ),
         ],
       ),

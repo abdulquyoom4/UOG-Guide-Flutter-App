@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../main.dart'; // for themeNotifier + toggleTheme()
+import '../main.dart';
+import '../screens/profile_screen.dart';
 
-// ─────────────────────────────────────────────────────────────
-// Section Label
-// ─────────────────────────────────────────────────────────────
 class SectionLabel extends StatelessWidget {
   final String text;
 
@@ -31,9 +29,6 @@ class SectionLabel extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Custom App Header (WITH THEME TOGGLE)
-// ─────────────────────────────────────────────────────────────
 class UOGHeader extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -63,7 +58,6 @@ class UOGHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ─── Top Row ───
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -88,15 +82,19 @@ class UOGHeader extends StatelessWidget {
               else
                 const SizedBox(),
 
-              // Theme Toggle Button
-              IconButton(
-                icon: Icon(
-                  isDark ? Icons.light_mode : Icons.dark_mode,
-                  color: Colors.white,
-                ),
-                onPressed: () async {
-                  await toggleTheme();
-                },
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isDark ? Icons.light_mode : Icons.dark_mode,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      await toggleTheme();
+                    },
+                  ),
+
+                ],
               ),
             ],
           ),
@@ -155,9 +153,6 @@ class UOGHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Quick Card
-// ─────────────────────────────────────────────────────────────
 class QuickCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -236,119 +231,6 @@ class QuickCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Announcement Card
-// ─────────────────────────────────────────────────────────────
-class AnnouncementCard extends StatelessWidget {
-  final List<Map<String, dynamic>> announcements;
-
-  const AnnouncementCard({
-    super.key,
-    required this.announcements,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: isDark
-              ? AppColors.darkBorder
-              : AppColors.border,
-          width: 0.5,
-        ),
-      ),
-      child: Column(
-        children: announcements
-            .map(
-              (a) => _AnnouncementRow(
-            text: a['text'],
-            date: a['date'],
-            dotColor: a['color'],
-            isLast: a == announcements.last,
-          ),
-        )
-            .toList(),
-      ),
-    );
-  }
-}
-
-class _AnnouncementRow extends StatelessWidget {
-  final String text;
-  final String date;
-  final Color dotColor;
-  final bool isLast;
-
-  const _AnnouncementRow({
-    required this.text,
-    required this.date,
-    required this.dotColor,
-    required this.isLast,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            margin: const EdgeInsets.only(top: 5),
-            decoration: BoxDecoration(
-              color: dotColor,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.5,
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.color,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-// Info Row
-// ─────────────────────────────────────────────────────────────
 class InfoRow extends StatelessWidget {
   final Widget? icon;
   final String title;

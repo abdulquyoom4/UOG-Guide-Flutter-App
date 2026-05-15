@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uog_guide/screens/campus_screen.dart';
 import '../widgets/common_widgets.dart';
 import 'gpa_screen.dart';
 import 'departments_screen.dart';
@@ -10,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor, // dynamic
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
           const UOGHeader(
@@ -28,11 +29,12 @@ class HomeScreen extends StatelessWidget {
                   child: GridView.count(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                    mainAxisSpacing: 16,
                     childAspectRatio: 1.4,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
+
                       QuickCard(
                         icon: Icons.menu_book_outlined,
                         title: 'LMS',
@@ -60,28 +62,10 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                       QuickCard(
-                        icon: Icons.school_outlined,
-                        title: 'GPA Calculator',
-                        subtitle: 'Calculate semester GPA',
-                        iconBg: const Color(0xFFDBEAFE),
-                        onTap: () => Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (_) => const GpaScreen())),
-                      ),
-                      QuickCard(
-                        icon: Icons.domain_outlined,
-                        title: 'Departments',
-                        subtitle: 'Programs & info',
-                        iconBg: const Color(0xFFEDE9FE),
-                        onTap: () => Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (_) => const DepartmentsScreen())),
-                      ),
-                      QuickCard(
                         icon: Icons.receipt_long_outlined,
                         title: 'Academic Calendar',
                         subtitle: 'Yearly Study Schedule',
-                        iconBg: const Color(0xFFDCFCE7),
+                        iconBg: const Color(0xFEECFCE7),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -93,11 +77,17 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                       QuickCard(
-                        icon: Icons.person_outline,
-                        title: 'Faculty',
-                        subtitle: 'Teacher directory',
-                        iconBg: const Color(0xFFFCE7F3),
-                        onTap: () {},
+                        icon: Icons.pin_drop_outlined,
+                        title: 'Campus Info',
+                        subtitle: 'All About UOG Mandi',
+                        iconBg: const Color(0xEDFDCEE7),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                             MaterialPageRoute(builder: (context)=> const CampusScreen())
+
+                          );
+                        },
                       ),
                     ],
                   ),

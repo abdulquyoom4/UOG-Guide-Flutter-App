@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/common_widgets.dart';
-import 'webview_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class CampusScreen extends StatelessWidget {
   const CampusScreen({super.key});
@@ -11,13 +11,51 @@ class CampusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    Future<void> makePhoneCall(String phoneNumber) async {
+      final Uri phoneUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+
+      if (await canLaunchUrl(phoneUri)) {
+        await launchUrl(phoneUri);
+      } else {
+        throw 'Could not launch dialer';
+      }
+    }
+
+
+    Future<void> openExternalApp(String link) async {
+      final Uri uri = Uri.parse(
+        link,
+      );
+
+      try {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    Future<void> sendEmail() async {
+      final Uri emailUri = Uri(
+        scheme: 'mailto',
+        path: 'mandi@uog.edu.pk',
+      );
+
+      await launchUrl(emailUri);
+    }
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Column(
         children: [
           const UOGHeader(
             title: 'Campus Info',
-            subtitle: 'MB Sub-Campus details',
+            subtitle: 'Sub-Campus Mandi Bahauddin details',
             showBack: true,
           ),
           Expanded(
@@ -71,94 +109,48 @@ class CampusScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SectionLabel('Campus Resources'),
+                const SectionLabel('Contact Details'),
 
                 InfoRow(
                   icon: const Icon(Icons.phone_outlined),
                   title: 'Contact Office',
-                  subtitle: '+92-546-123456',
-                  onTap: () {},
-                ),
-                InfoRow(
-                  icon: const Icon(Icons.local_library_outlined),
-                  title: 'Library',
-                  subtitle: 'Mon–Sat, 8am–6pm',
-                  onTap: () {},
-                ),
-                InfoRow(
-                  icon: const Icon(Icons.computer_outlined),
-                  title: 'Computer Lab',
-                  subtitle: '2 labs, 60 computers each',
-                  onTap: () {},
-                ),
-                InfoRow(
-                  icon: const Icon(Icons.sports_soccer_outlined),
-                  title: 'Sports Grounds',
-                  subtitle: 'Cricket, Football, Volleyball',
-                  onTap: () {},
-                ),
-                InfoRow(
-                  icon: const Icon(Icons.restaurant_outlined),
-                  title: 'Cafeteria',
-                  subtitle: '8am–5pm daily',
-                  onTap: () {},
-                ),
-
-                const SectionLabel('About Us'),
-
-                InfoRow(
-                  icon: const Icon(Icons.language),
-                  title: 'Portfolio',
-                  subtitle: 'abdulquyoom.tech',
+                  subtitle: '0546-650410',
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const WebViewScreen(
-                          url: 'https://abdulquyoom.tech/',
-                        ),
-                      ),
-                    );
+                    makePhoneCall('0546-650410');
                   },
                 ),
                 InfoRow(
-                  icon: const FaIcon(FontAwesomeIcons.linkedinIn),
-                  title: 'LinkedIn',
-                  subtitle: 'Abdul Quyoom',
-                  onTap: () async {
-                    final Uri url =
-                    Uri.parse('https://www.linkedin.com/in/abdulquyoom4/');
-                    if (!await launchUrl(url,
-                        mode: LaunchMode.externalApplication)) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Could not open LinkedIn'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      }
-                    }
+                  icon: const FaIcon(FontAwesomeIcons.whatsapp),
+                  title: 'WhatsApp',
+                  subtitle: '0340-3777544',
+                  onTap: () {
+                    openExternalApp('whatsapp://send?phone=+923403777544');
                   },
                 ),
                 InfoRow(
-                  icon: const FaIcon(FontAwesomeIcons.github),
-                  title: 'Github',
-                  subtitle: 'abdulquyoom4',
-                  onTap: () async {
-                    final Uri url =
-                    Uri.parse('https://github.com/abdulquyoom4');
-                    if (!await launchUrl(url,
-                        mode: LaunchMode.externalApplication)) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Could not open Github'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      }
-                    }
+                  icon: const Icon(Icons.email_outlined),
+                  title: 'Email',
+                  subtitle: 'mandi@uog.edu.pk',
+                  onTap: () {
+                    sendEmail();
+                  },
+                ),
+
+                const SectionLabel('Social Links'),
+                InfoRow(
+                  icon: const FaIcon(FontAwesomeIcons.facebook),
+                  title: 'Facebook',
+                  subtitle: 'University of Gujrat Sub Campus',
+                  onTap: () {
+                    openExternalApp('https://www.facebook.com/share/1LR5exbYCh/');
+                  },
+                ),
+                InfoRow(
+                  icon: const FaIcon(FontAwesomeIcons.instagram),
+                  title: 'Instagram',
+                  subtitle: 'uogmbdincampus',
+                  onTap: () {
+                    openExternalApp('https://www.instagram.com/uogmbdincampus/');
                   },
                 ),
               ],
