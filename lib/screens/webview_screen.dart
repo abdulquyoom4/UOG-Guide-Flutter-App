@@ -170,6 +170,7 @@ class _WebViewScreenState extends State<WebViewScreen>
 
         if (didPop) return;
 
+        // System back button/navigation goes back one page in history
         if (await _controller.canGoBack()) {
           await _controller.goBack();
         } else {
@@ -185,15 +186,10 @@ class _WebViewScreenState extends State<WebViewScreen>
 
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-
-            onPressed: () async {
-
-              if (await _controller.canGoBack()) {
-                await _controller.goBack();
-              } else {
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
+            // Top arrow always returns to the app
+            onPressed: () {
+              if (context.mounted) {
+                Navigator.pop(context);
               }
             },
           ),

@@ -9,46 +9,63 @@ class AuthService {
   Stream<User?> get user => _auth.authStateChanges();
 
   // Sign in with email and password
-  Future<UserCredential?> signIn(String email, String password) async {
+  Future<UserCredential?> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      return await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
+      final result = await _auth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
+
+      final user = result.user;
+
+      // Block access if email is not verified
+      if (user != null && !user.emailVerified) {
+        await _auth.signOut();
+        throw FirebaseAuthException(
+          code: 'email-not-verified',
+          message: 'Please verify your email first. Check your inbox (or spam folder).',
+        );
+      }
+      return result;
+    } on FirebaseAuthException {
       rethrow;
     } catch (e) {
-      print(e.toString());
-      return null;
+      throw Exception(e.toString());
     }
   }
 
-  // Register with email and password without auto-logging in the main app
-  Future<UserCredential?> register(String email, String password, String fullName) async {
+  // Register with email and password using a temporary app instance to avoid auto-login flicker
+  Future<UserCredential?> register({
+    required String email,
+    required String password,
+    required String fullName,
+  }) async {
     FirebaseApp? tempApp;
     try {
-      // Create a temporary Firebase app instance for registration
       tempApp = await Firebase.initializeApp(
         name: 'TempRegisterApp',
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
       FirebaseAuth tempAuth = FirebaseAuth.instanceFor(app: tempApp);
-      
-      UserCredential result = await tempAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      
-      // Update display name
+
+      final result = await tempAuth.createUserWithEmailAndPassword(
+        email: email.trim().toLowerCase(),
+        password: password,
+      );
+
       await result.user?.updateDisplayName(fullName);
-      
+
+      // ✅ SEND EMAIL VERIFICATION
+      await result.user?.sendEmailVerification();
+
       return result;
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
+    } on FirebaseAuthException {
       rethrow;
-    } catch (e) {
-      print(e.toString());
-      return null;
     } finally {
-      // Always delete the temporary app to clean up resources
       if (tempApp != null) {
         await tempApp.delete();
       }

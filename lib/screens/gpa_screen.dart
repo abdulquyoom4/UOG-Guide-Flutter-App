@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../widgets/common_widgets.dart';
@@ -120,6 +122,8 @@ class _GpaScreenState extends State<GpaScreen> {
 
                 const SectionLabel('Subjects'),
 
+
+
                 ..._subjects.asMap().entries.map(
                       (entry) => _SubjectRow(
                     index: entry.key,
@@ -130,6 +134,28 @@ class _GpaScreenState extends State<GpaScreen> {
                     onDelete: () => _removeSubject(entry.key),
                   ),
                 ),
+                _subjects.isNotEmpty ?
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.swipe_left,
+                        size: 16,
+                        color: theme.hintColor,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Swipe left to delete subjects',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.hintColor,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ): const SizedBox(),
+                const SizedBox(height: 16),
                 GestureDetector(
                   onTap: _addSubject,
                   child: Container(

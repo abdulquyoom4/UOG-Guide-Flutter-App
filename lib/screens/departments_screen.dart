@@ -11,7 +11,7 @@ class DepartmentsScreen extends StatelessWidget {
       'short': 'BSCS',
       'icon': Icons.computer,
       'years': 4,
-      'credits': 136,
+      'credits': 132,
       'desc':
       'Core CS topics including algorithms, databases, networks, AI and software engineering.',
       'colors': [Color(0xFF1E40AF), Color(0xFF3B82F6)],

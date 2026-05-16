@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
 
@@ -12,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _rollController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
 
@@ -23,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
+    _rollController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -31,28 +33,39 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
+    // Automatically append domain to Roll No to form a valid Firebase email
+    final String rollNo = _rollController.text.trim().toLowerCase();
+    final String email = "$rollNo@uog.edu.pk";
+
     try {
       if (_isLogin) {
-        await _authService.signIn(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
+        // Sign in using named parameters
+        final result = await _authService.signIn(
+          email: email,
+          password: _passwordController.text.trim(),
         );
+        
+        if (result != null && mounted) {
+          // Successfully logged in, return to Profile screen
+          Navigator.pop(context);
+        }
       } else {
+        // Register using named parameters
         final result = await _authService.register(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-          _nameController.text.trim(),
+          email: email,
+          password: _passwordController.text.trim(),
+          fullName: _nameController.text.trim(),
         );
 
         if (result != null) {
-          // User is created via tempApp in AuthService, so no signout needed here 
-          // but we stay on LoginScreen to show the dialog and then switch state.
-
           if (mounted) {
             final isDark = Theme.of(context).brightness == Brightness.dark;
             showDialog(
@@ -74,25 +87,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.accent.withOpacity(0.1),
+                          color: Colors.green.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.check_circle_rounded,
-                          color: AppColors.accent,
+                          Icons.mark_email_read_outlined,
+                          color: Colors.green,
                           size: 64,
                         ),
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Success!',
+                        'Verify Your Email',
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Your account has been created successfully. Please log in with your credentials to continue.',
+                        'Account created successfully! A verification link has been sent to your university email. Please verify before logging in.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
@@ -111,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _passwordController.clear();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             elevation: 0,
@@ -136,12 +149,41 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         }
       }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          switch (e.code) {
+            case 'user-not-found':
+              _errorMessage = "No account found with this Roll No.";
+              break;
+            case 'wrong-password':
+              _errorMessage = "Incorrect password. Please try again.";
+              break;
+            case 'invalid-credential':
+              _errorMessage = "Incorrect Roll No or password.";
+              break;
+            case 'email-not-verified':
+              _errorMessage = e.message;
+              break;
+            case 'user-disabled':
+              _errorMessage = "This account has been disabled.";
+              break;
+            case 'too-many-requests':
+              _errorMessage = "Too many failed attempts. Try again later.";
+              break;
+            default:
+              _errorMessage = e.message ?? "An error occurred during authentication.";
+          }
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = e.toString().contains(']') 
-            ? e.toString().split(']').last.trim() 
-            : e.toString();
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString().contains(']') 
+              ? e.toString().split(']').last.trim() 
+              : e.toString().replaceAll('Exception: ', '');
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -157,9 +199,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.primary),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -184,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _isLogin 
-                      ? 'Sign in to continue your journey' 
+                      ? 'Sign in with your Roll No' 
                       : 'Join the UOG Guide community today',
                   style: TextStyle(
                     color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
@@ -214,23 +264,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // Email Field
+                // Roll No Field with Format Validation
                 TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: _rollController,
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9-]')),
+                  ],
                   decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    prefixIcon: const Icon(Icons.email_outlined),
+                    labelText: 'Roll No',
+                    hintText: '23011519-000',
+                    prefixIcon: const Icon(Icons.badge_outlined),
+                    suffixText: '@uog.edu.pk',
+                    suffixStyle: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'Please enter your Roll No';
                     }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Please enter a valid email';
+                    // Validates format: 8 digits - 3 digits
+                    final rollRegex = RegExp(r'^\d{8}-\d{3}$');
+                    if (!rollRegex.hasMatch(value)) {
+                      return 'Use format: 23011519-000';
                     }
                     return null;
                   },
@@ -258,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                
+
                 if (_errorMessage != null) ...[
                   const SizedBox(height: 16),
                   Text(
