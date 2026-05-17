@@ -34,7 +34,6 @@ class HomeScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-
                       QuickCard(
                         icon: Icons.menu_book_outlined,
                         title: 'LMS',
@@ -52,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                         icon: Icons.edit_document,
                         title: 'CMS',
                         subtitle: 'Campus Management',
-                        iconBg: const Color(0xFFFEF3C7),
+                        iconBg: const Color(0xFFDBEAFE),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -65,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                         icon: Icons.receipt_long_outlined,
                         title: 'Academic Calendar',
                         subtitle: 'Yearly Study Schedule',
-                        iconBg: const Color(0xFEECFCE7),
+                        iconBg: const Color(0xFFDCFCE7),
                         onTap: () {
                           Navigator.push(
                               context,
@@ -80,15 +79,15 @@ class HomeScreen extends StatelessWidget {
                         icon: Icons.pin_drop_outlined,
                         title: 'Campus Info',
                         subtitle: 'All About UOG Mandi',
-                        iconBg: const Color(0xEDFDCEE7),
+                        iconBg: const Color(0xFFFCE7F3),
                         onTap: () {
                           Navigator.push(
                               context,
                              MaterialPageRoute(builder: (context)=> const CampusScreen())
-
                           );
                         },
                       ),
+
                     ],
                   ),
                 ),

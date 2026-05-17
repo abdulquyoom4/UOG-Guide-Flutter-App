@@ -273,7 +273,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                   decoration: InputDecoration(
                     labelText: 'Roll No',
-                    hintText: '23011519-000',
                     prefixIcon: const Icon(Icons.badge_outlined),
                     suffixText: '@uog.edu.pk',
                     suffixStyle: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),

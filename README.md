@@ -1,5 +1,40 @@
-# UOG Guide — Flutter App
+# UOG Guide — Student Companion App
 ### University of Gujrat, Mandi Bahauddin Sub-Campus
+
+A feature-rich Flutter application designed to provide UOG students with easy access to academic tools, campus information, and personal productivity features.
+
+---
+
+## 🚀 Key Features
+
+- **🔐 Smart Student Authentication**:
+  - Roll Number-based login (e.g., `23011519-000`).
+  - Automatic appending of `@uog.edu.pk` domain.
+  - Mandatory university email verification.
+  - Guest mode support (browse home/campus without logging in).
+
+- **📝 Academic Notes (CRUD)**:
+  - Personal notes management synced across devices.
+  - Powered by **Firebase Firestore** with real-time updates.
+  - Secure data: users can only access their own notes.
+
+- **📊 GPA Calculator**:
+  - Real-time GPA calculation logic tuned to the **University of Gujrat** grading policy.
+  - Interactive UI for adding, removing, and updating subject grades.
+
+- **🌐 Integrated University Portals**:
+  - Direct access to **LMS** and **CMS**.
+  - Integrated **Academic Calendar** viewer.
+  - Smooth in-app browser experience with progress indicators.
+
+- **🏢 Campus & Programs**:
+  - Detailed department insights (CS, BBA, English, etc.).
+  - Campus facilities info (Library, Labs, Transport).
+
+- **🌓 Professional UI/UX**:
+  - Clean Material Design 3 interface.
+  - Dynamic **Light & Dark Mode** with persistent preference.
+  - Intuitive bottom navigation and profile management.
 
 ---
 
@@ -7,62 +42,43 @@
 
 ```
 lib/
-├── main.dart                    # App entry + Bottom Navigation Shell
+├── main.dart                # App Shell & Bottom Navigation
+├── firebase_options.dart    # Multi-platform Firebase configuration
 ├── theme/
-│   └── app_theme.dart           # Colors, ThemeData
+│   └── app_theme.dart       # Colors & Light/Dark Theme definitions
 ├── models/
-│   └── models.dart              # Subject, Department, Announcement models
+│   ├── note_model.dart      # Firestore Note data model
+│   └── models.dart          # Subject & Department models
+├── services/
+│   ├── auth_service.dart    # Firebase Auth (Roll No logic & Verification)
+│   └── notes_service.dart   # Firestore CRUD service
 ├── widgets/
-│   └── common_widgets.dart      # Reusable: SectionLabel, UOGHeader, QuickCard, etc.
+│   └── common_widgets.dart  # Reusable UI (UOGHeader, QuickCard, etc.)
 └── screens/
-    ├── home_screen.dart         # Home with quick grid + announcements
-    ├── gpa_screen.dart          # GPA Calculator (full logic + add/remove subjects)
-    ├── departments_screen.dart  # Expandable department cards
-    └── campus_screen.dart       # Campus info + important links
+    ├── home_screen.dart     # Dashboard & Quick access
+    ├── login_screen.dart    # Roll No-based login/signup UI
+    ├── notes_screen.dart    # Student notes management UI
+    ├── gpa_screen.dart      # Interactive GPA calculator
+    ├── profile_screen.dart  # Account info & Developer details
+    ├── campus_screen.dart   # Campus resources info
+    ├── departments_screen.dart # Academic programs info
+    └── webview_screen.dart  # In-app browser engine
 ```
 
 ---
 
-## 🚀 Setup
+## 🛠️ Tech Stack
 
-```bash
-# 1. Create Flutter project
-flutter create uog_guide
-cd uog_guide
-
-# 2. Replace lib/ folder with files from this project
-
-# 3. Install dependencies
-flutter pub get
-
-# 4. Run
-flutter run
-```
+- **Frontend**: Flutter (Dart)
+- **Backend**: Firebase Authentication, Cloud Firestore
+- **Local Storage**: Shared Preferences (Theme persistence)
+- **Networking**: `url_launcher`, `webview_flutter`
 
 ---
 
-## ✅ Features Implemented
+## 👨‍💻 Developed By
 
-- [x] Home screen with quick access grid (6 cards)
-- [x] Announcements with colored dot indicators
-- [x] GPA Calculator — live calculation, grade dropdown
-- [x] Add Subject via bottom sheet
-- [x] Swipe to delete subjects
-- [x] UOG grade scale reference (A=4.0 ... F=0.0)
-- [x] Departments screen — 5 departments with expandable cards
-- [x] Campus info — facilities + important links
-- [x] Bottom navigation bar (persistent)
-- [x] Custom UOG navy color theme (#1A3A6B)
-
----
-
-## 📦 Recommended Next Additions
-
-| Feature | Package |
-|---|---|
-| Google Fonts (Poppins) | `google_fonts` |
-| Local storage (GPA history) | `hive_flutter` |
-| GPA trend chart | `fl_chart` |
-| Firebase announcements | `firebase_core`, `cloud_firestore` |
-| URL launcher (LMS links) | `url_launcher` |
-| Campus map | `google_maps_flutter` |
+**Abdul Quyoom**
+- 🌐 [Portfolio](https://abdulquyoom.tech/)
+- 🔗 [LinkedIn](https://www.linkedin.com/in/abdulquyoom4/)
+- 💻 [GitHub](https://github.com/abdulquyoom4)
