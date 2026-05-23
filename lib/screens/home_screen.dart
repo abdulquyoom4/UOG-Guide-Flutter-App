@@ -4,6 +4,7 @@ import '../widgets/common_widgets.dart';
 import 'gpa_screen.dart';
 import 'departments_screen.dart';
 import 'webview_screen.dart';
+import 'timetable_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -84,6 +85,18 @@ class HomeScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                              MaterialPageRoute(builder: (context)=> const CampusScreen())
+                          );
+                        },
+                      ),
+                      QuickCard(
+                        icon: Icons.view_week,
+                        title: 'Time Table',
+                        subtitle: 'Daily Classes Schedule',
+                        iconBg: const Color(0xDDFCE1C3),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context)=> const TimeTableScreen())
                           );
                         },
                       ),

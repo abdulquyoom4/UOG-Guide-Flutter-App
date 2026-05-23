@@ -46,6 +46,20 @@ class DepartmentsScreen extends StatelessWidget {
       'scrollId': '#uogis-data'
     },
     {
+      'name': 'Psychology',
+      'short': 'BS Psychology',
+      'icon': Icons.psychology,
+      'years': 4,
+      'credits': 130,
+      'desc':
+      'Study of human behavior, emotions, cognition, personality, and mental processes through scientific theories and research.',
+      'colors': [Color(0xFFC2410C),
+        Color(0xFFFB923C),],
+      'studyScheme':
+      'https://uog.edu.pk/en/uog-academics/department-of-psychology/programs',
+      'scrollId': '#uogis-data'
+    },
+    {
       'name': 'Mathematics',
       'short': 'BS Math',
       'icon': Icons.functions,
@@ -54,6 +68,20 @@ class DepartmentsScreen extends StatelessWidget {
       'desc':
       'Pure and applied mathematics including calculus, algebra and statistics.',
       'colors': [Color(0xFF9F1239), Color(0xFFF43F5E)],
+      'studyScheme':
+      'https://uog.edu.pk/en/uog-academics/department-of-mathematics/programs',
+      'scrollId': '#uogis-data'
+    },
+    {
+      'name': 'Physics',
+      'short': 'BS Physics',
+      'icon': Icons.science_outlined,
+      'years': 4,
+      'credits': 130,
+      'desc':
+      'Study of matter, energy, motion, forces, and the fundamental laws governing the universe and natural phenomena.',
+      'colors': [Color(0xFFDB2777),
+        Color(0xFFF472B6),],
       'studyScheme':
       'https://uog.edu.pk/en/uog-academics/department-of-mathematics/programs',
       'scrollId': '#uogis-data'
